@@ -6,21 +6,26 @@
       @keypress.enter="addTodo"
       placeholder="Add a new todo..."
     />
+
     <div v-if="todos.length">
-      <ul>
-        <li v-for="todo in todos" :key="todo.id" @click="deleteTodo(todo.id)">
-          {{ todo.text }}
-        </li>
-      </ul>
+      <div id="flip-list-demo" class="demo">
+        <button v-on:click="shuffle">Shuffle Todo List</button>
+        <transition-group name="flip-list" tag="ul">
+          <li v-for="todo in todos" :key="todo.id" @click="deleteTodo(todo.id)">
+              {{ todo.text }}
+          </li>
+        </transition-group>
+        </div>
     </div>
     <div v-else>Woohoo, nothing left todo!</div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
-
+import { ref } from 'vue';
+import Vue from 'vue'
 export default {
+  el: '#flip-list-demo',
   setup(props, { emit }) {
     const todos = ref([
       { text: 'make the bed', id: 1 },
@@ -43,8 +48,15 @@ export default {
     }
 
     return { todos, addTodo, deleteTodo, newTodo }
-  }
-}
+  },
+    methods: {
+    shuffle: function () {
+      this.todos = _.shuffle(this.todos)
+    }
+    }
+
+};
+
 </script>
 
 <style>
@@ -79,4 +91,7 @@ export default {
   .todos li:hover {
     cursor: pointer;
   }
+  .flip-list-move {
+  transition: transform 1s;
+}
 </style>
